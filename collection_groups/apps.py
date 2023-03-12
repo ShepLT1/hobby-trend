@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class HobbiesConfig(AppConfig):
+class Collection_groupsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "hobbies"
+    name = "collection_groups"
