@@ -2,7 +2,7 @@ from django.db import models
 from shared.models import BaseModel
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from items.models import Item, Hobby
+from hobbies.models import Item, Hobby
 
 
 class Collection(BaseModel):
