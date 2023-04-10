@@ -28,9 +28,7 @@ class Hobby(BaseModel):
 class ListingSource(BaseModel):
     name = models.CharField(null=False, max_length=64, default=None)
 
-    hobby = models.ForeignKey(
-        Hobby, on_delete=models.CASCADE, related_name="listing_hobby", default=1
-    )
+    hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=1)
 
     def __str__(self) -> str:
         return self.name
