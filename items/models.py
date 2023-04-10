@@ -42,7 +42,7 @@ class Hobby(BaseModel):
 class ListingSource(BaseModel):
     name = models.CharField(null=False, max_length=64, default=None)
 
-    hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=1)
+    hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=[1])
 
     def __str__(self) -> str:
         return self.name
@@ -56,7 +56,7 @@ class Variation(BaseModel):
     )
 
     def __str__(self) -> str:
-        return self.name
+        return self.name + " (" + self.hobby.name + ")"
 
 
 class Format(BaseModel):
@@ -97,10 +97,10 @@ class Item(BaseModel):
         Hobby, on_delete=models.CASCADE, related_name="item_hobby", default=1
     )
 
-    sets = models.ManyToManyField(Set, related_name="item_set", default=1)
+    sets = models.ManyToManyField(Set, blank=True, related_name="item_set", default=[1])
 
     variations = models.ManyToManyField(
-        Variation, related_name="item_variation", default=1
+        Variation, blank=True, related_name="item_variation", default=[1]
     )
 
     release_date = models.DateField(null=True)
