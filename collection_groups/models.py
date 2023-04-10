@@ -20,13 +20,31 @@ class Collection(BaseModel):
         return self.name
 
 
-class CollectionItem(BaseModel):
+class Condition(BaseModel):
     class ConditionChoices(models.TextChoices):
         NEW = "NE", _("New")
-        LIKE = "LN", _("Used (Like new)")
+        MINT = "MT", _("Mint")
+        LIKENEW = "LN", _("Used (Like new)")
+        NEARMINT = "NM", _("Used (Near mint)")
+        EXCELLENT = "EX", _("Used (Excellent)")
+        VERYGOOD = "VG", _("Used (Very good)")
         GOOD = "GD", _("Used (Good)")
+        LIGHTPLAYED = "LP", _("Used (Lightly played)")
+        PLAYED = "PL", _("Used (Played)")
         POOR = "PR", _("Used (Poor)")
         OPEN = "OB", _("Used (Open box)")
+
+    name = models.CharField(
+        max_length=2, null=False, blank=False, choices=ConditionChoices.choices
+    )
+
+    hobby = models.ManyToManyField(Hobby, related_name="condition_hobby", default=1)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class CollectionItem(BaseModel):
 
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name="item", default=1
@@ -36,9 +54,7 @@ class CollectionItem(BaseModel):
         Collection, on_delete=models.CASCADE, related_name="collection", default=1
     )
 
-    condition = models.CharField(
-        max_length=32, null=False, blank=False, choices=ConditionChoices.choices
-    )
+    condition = models.ManyToManyField(Condition, related_name="condition", default=1)
 
     serial_number = models.CharField(max_length=32, blank=True)
 

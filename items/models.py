@@ -7,14 +7,28 @@ class Hobby(BaseModel):
     class Meta:
         verbose_name_plural = "Hobbies"
 
+    class HobbyTypeChoices(models.TextChoices):
+        CARD = "CD", _("Collectible card")
+        GAME = "GM", _("Game")
+        BASIC = "BC", _("Basic collection")
+
     class CodeTypeChoices(models.TextChoices):
         SETNUM = "SN", _("Set Number")
         ISBN = "IS", _("ISBN")
+        CARDNUM = "CN", _("Card Number")
 
     name = models.CharField(null=False, max_length=64, default=None)
 
+    type = models.CharField(
+        max_length=2,
+        null=False,
+        blank=False,
+        choices=HobbyTypeChoices.choices,
+        default="BC",
+    )
+
     universal_code_type = models.CharField(
-        max_length=32,
+        max_length=2,
         null=False,
         blank=False,
         choices=CodeTypeChoices.choices,
@@ -34,11 +48,59 @@ class ListingSource(BaseModel):
         return self.name
 
 
+class Variation(BaseModel):
+    name = models.CharField(unique=True, null=False, max_length=256, default=None)
+
+    hobby = models.ForeignKey(
+        Hobby, on_delete=models.CASCADE, related_name="variation_hobby", default=1
+    )
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Format(BaseModel):
+    name = models.CharField(unique=True, null=False, max_length=256, default=None)
+
+    item_count = models.IntegerField(null=False, default=1)
+
+    players = models.IntegerField(null=False, default=1)
+
+    # in minutes
+    estimated_time = models.IntegerField(null=False, default=20)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Set(BaseModel):
+    name = models.CharField(null=False, max_length=256, default=None)
+
+    hobby = models.ForeignKey(
+        Hobby, on_delete=models.CASCADE, related_name="set_hobby", default=1
+    )
+
+    format = models.ForeignKey(
+        Format, on_delete=models.CASCADE, related_name="set_format", default=1
+    )
+
+    release_date = models.DateField(null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Item(BaseModel):
     name = models.CharField(null=False, max_length=256, default=None)
 
     hobby = models.ForeignKey(
         Hobby, on_delete=models.CASCADE, related_name="item_hobby", default=1
+    )
+
+    sets = models.ManyToManyField(Set, related_name="item_set", default=1)
+
+    variations = models.ManyToManyField(
+        Variation, related_name="item_variation", default=1
     )
 
     release_date = models.DateField(null=True)
