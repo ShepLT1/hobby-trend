@@ -38,7 +38,7 @@ class Condition(BaseModel):
         max_length=2, null=False, blank=False, choices=ConditionChoices.choices
     )
 
-    hobby = models.ManyToManyField(Hobby, related_name="condition_hobby", default=1)
+    hobby = models.ManyToManyField(Hobby, related_name="condition_hobby", default=[1])
 
     def __str__(self) -> str:
         return self.name
@@ -54,7 +54,7 @@ class CollectionItem(BaseModel):
         Collection, on_delete=models.CASCADE, related_name="collection", default=1
     )
 
-    condition = models.ManyToManyField(Condition, related_name="condition", default=1)
+    condition = models.ManyToManyField(Condition, related_name="condition", default=[1])
 
     serial_number = models.CharField(max_length=32, blank=True)
 
