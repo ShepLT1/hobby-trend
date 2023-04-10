@@ -56,7 +56,7 @@ class Variation(BaseModel):
     )
 
     def __str__(self) -> str:
-        return self.name + " (" + self.hobby.name + ")"
+        return f"{self.name} ({self.hobby.name})"
 
 
 class Format(BaseModel):
