@@ -39,6 +39,5 @@ router.register(r"users", UserViewSet)
 urlpatterns = [
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
-    # path("collections/", include("hobbies.urls")),
     path("hobbies/", include("hobbies.urls")),
 ]

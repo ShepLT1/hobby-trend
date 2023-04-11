@@ -20,6 +20,13 @@ class HobbiesView(viewsets.ModelViewSet):
     queryset = Hobby.objects.all()
 
 
+class HobbyView(APIView):
+    def get(self, request, item_id: uuid, format=None):
+        hobby = get_object_or_404(Hobby, id=item_id)
+        serializer = HobbySerializer(hobby)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ListingSourcesView(viewsets.ModelViewSet):
     serializer_class = ListingSourceSerializer
     queryset = ListingSource.objects.all()
@@ -47,7 +54,13 @@ class ItemView(APIView):
 
 class ListingsView(viewsets.ModelViewSet):
     serializer_class = ListingSerializer
-    queryset = Listing.objects.all()
+
+    def get_queryset(self):
+        range = int(self.request.query_params.get("range"))
+        queryset = Listing.objects.filter(item__id=self.kwargs["item_id"]).order_by(
+            "-created"
+        )[:range]
+        return queryset
 
 
 class MediaView(viewsets.ModelViewSet):
