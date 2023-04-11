@@ -57,6 +57,7 @@ class FormatSerializer(serializers.ModelSerializer):
         )
 
 
+# TODO: When adding set, if set hobby.type is not BC, format field is required
 class SetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Set
@@ -72,6 +73,7 @@ class SetSerializer(serializers.ModelSerializer):
         )
 
 
+# TODO: When adding item that is part of a set, validate that item release date is before or equal to set release date
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
