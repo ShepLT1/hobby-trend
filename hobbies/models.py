@@ -17,7 +17,7 @@ class Hobby(BaseModel):
         ISBN = "IS", _("ISBN")
         CARDNUM = "CN", _("Card Number")
 
-    name = models.CharField(null=False, max_length=64, default=None)
+    name = models.CharField(max_length=64, default=None)
 
     type = models.CharField(
         max_length=2,
@@ -40,7 +40,7 @@ class Hobby(BaseModel):
 
 
 class ListingSource(BaseModel):
-    name = models.CharField(null=False, max_length=64, default=None)
+    name = models.CharField(max_length=64, default=None)
 
     hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=[1])
 
@@ -49,7 +49,7 @@ class ListingSource(BaseModel):
 
 
 class Variation(BaseModel):
-    name = models.CharField(unique=True, null=False, max_length=256, default=None)
+    name = models.CharField(unique=True, max_length=256, default=None)
 
     hobby = models.ForeignKey(
         Hobby, on_delete=models.CASCADE, related_name="variation_hobby", default=1
@@ -60,21 +60,29 @@ class Variation(BaseModel):
 
 
 class Format(BaseModel):
-    name = models.CharField(unique=True, null=False, max_length=256, default=None)
+    name = models.CharField(unique=True, max_length=256, default=None)
 
-    item_count = models.IntegerField(null=False, default=1)
+    hobby = models.ForeignKey(
+        Hobby, on_delete=models.CASCADE, related_name="format_hobby", default=1
+    )
 
-    players = models.IntegerField(null=False, default=1)
+    item_count = models.IntegerField(default=1)
+
+    players_min = models.IntegerField(verbose_name="Maximum # of Players", default=1)
+
+    players_max = models.IntegerField(verbose_name="Minimum # of Players", default=1)
 
     # in minutes
-    estimated_time = models.IntegerField(null=False, default=20)
+    average_time = models.IntegerField(
+        verbose_name="Average Game Time (minutes)", default=20
+    )
 
     def __str__(self) -> str:
         return self.name
 
 
 class Set(BaseModel):
-    name = models.CharField(null=False, max_length=256, default=None)
+    name = models.CharField(max_length=256, default=None)
 
     hobby = models.ForeignKey(
         Hobby, on_delete=models.CASCADE, related_name="set_hobby", default=1
@@ -91,7 +99,7 @@ class Set(BaseModel):
 
 
 class Item(BaseModel):
-    name = models.CharField(null=False, max_length=256, default=None)
+    name = models.CharField(max_length=256, default=None)
 
     hobby = models.ForeignKey(
         Hobby, on_delete=models.CASCADE, related_name="item_hobby", default=1
@@ -121,7 +129,7 @@ class Listing(BaseModel):
         ListingSource, on_delete=models.CASCADE, related_name="source", default=1
     )
 
-    date = models.DateField(null=False, blank=False)
+    date = models.DateField()
 
     price = models.DecimalField(max_digits=17, decimal_places=2)
 
@@ -139,7 +147,7 @@ class Media(BaseModel):
         Item, on_delete=models.CASCADE, related_name="media_item", default=1
     )
 
-    title = models.CharField(null=False, max_length=64, default=None)
+    title = models.CharField(max_length=64, default=None)
 
     src = models.URLField(default="https://google.com", max_length=512)
 
