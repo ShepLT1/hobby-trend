@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from datetime import datetime, timedelta
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,8 +22,8 @@ class HobbiesView(viewsets.ModelViewSet):
 
 
 class HobbyView(APIView):
-    def get(self, request, item_id: uuid, format=None):
-        hobby = get_object_or_404(Hobby, id=item_id)
+    def get(self, request, hobby_id: uuid, format=None):
+        hobby = get_object_or_404(Hobby, id=hobby_id)
         serializer = HobbySerializer(hobby)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -34,7 +35,11 @@ class ListingSourcesView(viewsets.ModelViewSet):
 
 class ItemsView(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
-    queryset = Item.objects.all()
+    # queryset = Item.objects.all()
+
+    def get_queryset(self):
+        queryset = Item.objects.filter(hobby__id=self.kwargs["hobby_id"])
+        return queryset
 
 
 class ItemView(APIView):
@@ -56,10 +61,15 @@ class ListingsView(viewsets.ModelViewSet):
     serializer_class = ListingSerializer
 
     def get_queryset(self):
-        range = int(self.request.query_params.get("range"))
-        queryset = Listing.objects.filter(item__id=self.kwargs["item_id"]).order_by(
-            "-created"
-        )[:range]
+        range = self.request.query_params.get("range")
+        if range is None:
+            range = 30
+        else:
+            range = int(range)
+        queryset = Listing.objects.filter(
+            item__id=self.kwargs["item_id"],
+            created_at__gte=datetime.now() - timedelta(days=range),
+        ).order_by("-created_at")
         return queryset
 
 
