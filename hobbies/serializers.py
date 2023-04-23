@@ -91,6 +91,21 @@ class ItemSerializer(serializers.ModelSerializer):
         )
 
 
+class SetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Set
+        fields = (
+            "id",
+            "name",
+            "hobby",
+            "format",
+            "release_date",
+            "created_at",
+            "updated_at",
+            "last_updated_by",
+        )
+
+
 class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing

@@ -11,6 +11,11 @@ urlpatterns = [
     ),
     path("items/<uuid:item_id>", views.ItemView.as_view()),
     path(
+        "<uuid:hobby_id>/sets",
+        views.SetsView.as_view({"get": "list", "post": "create"}),
+    ),
+    path("sets/<uuid:set_id>", views.SetView.as_view()),
+    path(
         "items/<uuid:item_id>/listings",
         views.ListingsView.as_view({"get": "list", "post": "create"}),
     ),

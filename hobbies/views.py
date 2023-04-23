@@ -10,8 +10,9 @@ from .serializers import (
     ItemSerializer,
     ListingSerializer,
     MediaSerializer,
+    SetSerializer,
 )
-from .models import Hobby, ListingSource, Item, Listing, Media
+from .models import Hobby, ListingSource, Item, Listing, Media, Set
 
 # Create your views here.
 
@@ -57,6 +58,33 @@ class ItemView(APIView):
     def put(self, request, item_id: uuid, format=None):
         item = get_object_or_404(Item, id=item_id)
         serializer = ItemSerializer(instance=item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SetsView(viewsets.ModelViewSet):
+    serializer_class = SetSerializer
+    # queryset = Item.objects.all()
+
+    def get_queryset(self):
+        queryset = Set.objects.filter(hobby__id=self.kwargs["hobby_id"])
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(last_updated_by=self.request.user)
+
+
+class SetView(APIView):
+    def get(self, request, set_id: uuid, format=None):
+        set = get_object_or_404(Set, id=set_id)
+        serializer = SetSerializer(set)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, set_id: uuid, format=None):
+        set = get_object_or_404(Set, id=set_id)
+        serializer = SetSerializer(instance=set, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
