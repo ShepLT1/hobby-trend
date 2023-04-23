@@ -40,4 +40,5 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
     path("hobbies/", include("hobbies.urls")),
+    path("collections/", include("individual_collections.urls")),
 ]

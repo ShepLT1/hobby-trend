@@ -41,6 +41,8 @@ class ItemsView(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     # queryset = Item.objects.all()
 
+    # TODO: add pagination
+
     def get_queryset(self):
         queryset = Item.objects.filter(hobby__id=self.kwargs["hobby_id"])
         return queryset
@@ -67,6 +69,8 @@ class ItemView(APIView):
 class SetsView(viewsets.ModelViewSet):
     serializer_class = SetSerializer
     # queryset = Item.objects.all()
+
+    # TODO: add pagination
 
     def get_queryset(self):
         queryset = Set.objects.filter(hobby__id=self.kwargs["hobby_id"])
