@@ -20,6 +20,9 @@ class HobbiesView(viewsets.ModelViewSet):
     serializer_class = HobbySerializer
     queryset = Hobby.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save(last_updated_by=self.request.user)
+
 
 class HobbyView(APIView):
     def get(self, request, hobby_id: uuid, format=None):
@@ -40,6 +43,9 @@ class ItemsView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Item.objects.filter(hobby__id=self.kwargs["hobby_id"])
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(last_updated_by=self.request.user)
 
 
 class ItemView(APIView):
@@ -71,6 +77,9 @@ class ListingsView(viewsets.ModelViewSet):
             created_at__gte=datetime.now() - timedelta(days=range),
         ).order_by("-created_at")
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(last_updated_by=self.request.user)
 
 
 class MediaView(viewsets.ModelViewSet):
