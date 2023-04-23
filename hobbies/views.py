@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, pagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import uuid
@@ -15,6 +15,10 @@ from .serializers import (
 from .models import Hobby, ListingSource, Item, Listing, Media, Set
 
 # Create your views here.
+class StandardResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 50
+    page_size_query_param = "page_size"
+    max_page_size = 200
 
 
 class HobbiesView(viewsets.ModelViewSet):
@@ -39,9 +43,7 @@ class ListingSourcesView(viewsets.ModelViewSet):
 
 class ItemsView(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
-    # queryset = Item.objects.all()
-
-    # TODO: add pagination
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = Item.objects.filter(hobby__id=self.kwargs["hobby_id"])
@@ -68,9 +70,7 @@ class ItemView(APIView):
 
 class SetsView(viewsets.ModelViewSet):
     serializer_class = SetSerializer
-    # queryset = Item.objects.all()
-
-    # TODO: add pagination
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = Set.objects.filter(hobby__id=self.kwargs["hobby_id"])
