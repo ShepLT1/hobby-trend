@@ -6,6 +6,10 @@ from hobbies.models import Item, Hobby
 
 
 class Collection(BaseModel):
+    class TypeChoices(models.TextChoices):
+        OWNED = "OW", _("Owned")
+        WISHLIST = "WL", _("Wishlist")
+
     name = models.CharField(max_length=64, default=None)
 
     hobby = models.ForeignKey(
@@ -15,6 +19,8 @@ class Collection(BaseModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user", default=1
     )
+
+    type = models.CharField(max_length=2, choices=TypeChoices.choices, default="OW")
 
     def __str__(self) -> str:
         return self.name
