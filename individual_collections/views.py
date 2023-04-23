@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, pagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import uuid
@@ -8,12 +8,15 @@ from .serializers import CollectionSerializer, CollectionItemSerializer
 from .models import Collection, CollectionItem
 
 # Create your views here.
+class StandardResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 50
+    page_size_query_param = "page_size"
+    max_page_size = 200
 
 
 class CollectionsView(viewsets.ModelViewSet):
     serializer_class = CollectionSerializer
-
-    # TODO: Add pagination
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = Collection.objects.filter(user=self.request.user)
@@ -42,8 +45,7 @@ class CollectionView(APIView):
 
 class CollectionItemsView(viewsets.ModelViewSet):
     serializer_class = CollectionItemSerializer
-
-    # TODO: add pagination
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = CollectionItem.objects.filter(
