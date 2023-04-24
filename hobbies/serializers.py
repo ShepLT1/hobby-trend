@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hobby, ListingSource, Item, Listing, Media, Format, Variation, Set
+from .models import Hobby, Marketplace, Item, Listing, Media, Format, Variation, Set
 
 
 class HobbySerializer(serializers.ModelSerializer):
@@ -16,9 +16,9 @@ class HobbySerializer(serializers.ModelSerializer):
         )
 
 
-class ListingSourceSerializer(serializers.ModelSerializer):
+class MarketplaceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ListingSource
+        model = Marketplace
         fields = (
             "id",
             "name",

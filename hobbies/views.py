@@ -6,13 +6,13 @@ from rest_framework.views import APIView
 import uuid
 from .serializers import (
     HobbySerializer,
-    ListingSourceSerializer,
+    MarketplaceSerializer,
     ItemSerializer,
     ListingSerializer,
     MediaSerializer,
     SetSerializer,
 )
-from .models import Hobby, ListingSource, Item, Listing, Media, Set
+from .models import Hobby, Marketplace, Item, Listing, Media, Set
 
 # Create your views here.
 class StandardResultsSetPagination(pagination.PageNumberPagination):
@@ -36,9 +36,9 @@ class HobbyView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ListingSourcesView(viewsets.ModelViewSet):
-    serializer_class = ListingSourceSerializer
-    queryset = ListingSource.objects.all()
+class MarketplacesView(viewsets.ModelViewSet):
+    serializer_class = MarketplaceSerializer
+    queryset = Marketplace.objects.all()
 
 
 class ItemsView(viewsets.ModelViewSet):

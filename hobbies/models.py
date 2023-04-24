@@ -39,7 +39,7 @@ class Hobby(BaseModel):
         return self.name
 
 
-class ListingSource(BaseModel):
+class Marketplace(BaseModel):
     name = models.CharField(max_length=64, default=None)
 
     hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=[1])
@@ -119,6 +119,17 @@ class Item(BaseModel):
         return self.name
 
 
+class ItemExternalSource(BaseModel):
+    listing_source = models.ForeignKey(Marketplace, on_delete=models.CASCADE)
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    data = models.JSONField(blank=True, default=dict)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Listing(BaseModel):
 
     item = models.ForeignKey(
@@ -126,7 +137,7 @@ class Listing(BaseModel):
     )
 
     source = models.ForeignKey(
-        ListingSource, on_delete=models.CASCADE, related_name="source", default=1
+        Marketplace, on_delete=models.CASCADE, related_name="source", default=1
     )
 
     date = models.DateField()
