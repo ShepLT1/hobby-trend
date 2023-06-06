@@ -139,8 +139,6 @@ class Listing(BaseModel):
         Marketplace, on_delete=models.CASCADE, related_name="source", default=1
     )
 
-    date = models.DateField()
-
     price = models.DecimalField(max_digits=17, decimal_places=2)
 
     shipping = models.DecimalField(max_digits=17, decimal_places=2)

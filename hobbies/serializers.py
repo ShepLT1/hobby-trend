@@ -113,7 +113,6 @@ class ListingSerializer(serializers.ModelSerializer):
             "id",
             "item",
             "source",
-            "date",
             "price",
             "link",
             "created_at",
