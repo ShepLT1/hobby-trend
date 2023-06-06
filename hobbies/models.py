@@ -131,7 +131,6 @@ class ItemExternalSource(BaseModel):
 
 
 class Listing(BaseModel):
-
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name="listing_item", default=1
     )
@@ -143,6 +142,8 @@ class Listing(BaseModel):
     date = models.DateField()
 
     price = models.DecimalField(max_digits=17, decimal_places=2)
+
+    shipping = models.DecimalField(max_digits=17, decimal_places=2)
 
     link = models.URLField(default="https://google.com", max_length=512)
 
