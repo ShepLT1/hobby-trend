@@ -91,15 +91,14 @@ class ItemSerializer(serializers.ModelSerializer):
         )
 
 
-class SetSerializer(serializers.ModelSerializer):
+class MarketplaceItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Set
         fields = (
             "id",
-            "name",
-            "hobby",
-            "format",
-            "release_date",
+            "marketplace",
+            "item",
+            "data",
             "created_at",
             "updated_at",
             "last_updated_by",

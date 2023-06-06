@@ -119,8 +119,8 @@ class Item(BaseModel):
         return self.name
 
 
-class ItemExternalSource(BaseModel):
-    listing_source = models.ForeignKey(Marketplace, on_delete=models.CASCADE)
+class MarketplaceItem(BaseModel):
+    marketplace = models.ForeignKey(Marketplace, on_delete=models.CASCADE)
 
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
