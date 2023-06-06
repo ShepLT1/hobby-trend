@@ -141,7 +141,9 @@ class Listing(BaseModel):
 
     price = models.DecimalField(max_digits=17, decimal_places=2)
 
-    shipping = models.DecimalField(max_digits=17, decimal_places=2)
+    shipping = models.DecimalField(
+        max_digits=17, decimal_places=2, blank=True, null=True
+    )
 
     link = models.URLField(default="https://google.com", max_length=512)
 
