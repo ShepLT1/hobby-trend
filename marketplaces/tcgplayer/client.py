@@ -37,11 +37,11 @@ class TCGPlayer:
             raise Exception(response.details)
         else:
             marketplace_item.data.id = response.tcgplayer_id
-            self.create_listing(item, marketplace_item)
+            self.ingest_listing(item, marketplace_item)
             marketplace_item.save()
             return response
 
-    def create_listing(self, item, marketplace, marketplace_item):
+    def ingest_listing(self, item, marketplace, marketplace_item):
         new_listing = Listing.objects.create(
             {
                 "item": item,

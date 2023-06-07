@@ -31,8 +31,8 @@ class Marketplace:
             response = self.client.get_item_by_id(marketplace_item.data["id"])
         return response
 
-    def create_listing(self, item):
+    def ingest_listing(self, item):
         marketplace_item = self.get_item(item)
         marketplace = Marketplace.objects.get(name=self.client.source_name)
-        response = self.client.create_listing(item, marketplace, marketplace_item)
+        response = self.client.ingest_listing(item, marketplace, marketplace_item)
         return response
