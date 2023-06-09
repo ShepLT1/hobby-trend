@@ -37,7 +37,7 @@ class TCGPlayer:
             raise Exception(response.details)
         else:
             marketplace_item.data.id = response.tcgplayer_id
-            self.ingest_listing(item, marketplace_item)
+            self.ingest_listing(item, marketplace_item.marketplace, marketplace_item)
             marketplace_item.save()
             return response
 
