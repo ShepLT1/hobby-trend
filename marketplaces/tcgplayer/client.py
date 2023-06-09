@@ -37,17 +37,17 @@ class TCGPlayer:
             raise Exception(response.details)
         else:
             marketplace_item.data.id = response.tcgplayer_id
-            self.ingest_listing(item, marketplace_item.marketplace, marketplace_item)
+            self.ingest_listing(item, marketplace_item.marketplace, response)
             marketplace_item.save()
             return response
 
-    def ingest_listing(self, item, marketplace, marketplace_item):
+    def ingest_listing(self, item, marketplace, marketplace_item_listing):
         new_listing = Listing.objects.create(
             {
                 "item": item,
                 "source": marketplace,
-                "price": marketplace_item.prices.usd,
-                "link": marketplace_item.purchase_uris.tcgplayer,
+                "price": marketplace_item_listing.prices.usd,
+                "link": marketplace_item_listing.purchase_uris.tcgplayer,
             }
         )
         return new_listing
