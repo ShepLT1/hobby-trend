@@ -9,7 +9,7 @@ from .models import (
     Set,
     Format,
     Variation,
-    ItemExternalSource,
+    MarketplaceItem,
 )
 from shared.admin import BaseAdmin
 
@@ -21,4 +21,4 @@ admin.site.register(Item, BaseAdmin)
 admin.site.register(Set, BaseAdmin)
 admin.site.register(Format, BaseAdmin)
 admin.site.register(Variation, BaseAdmin)
-admin.site.register(ItemExternalSource, BaseAdmin)
+admin.site.register(MarketplaceItem, BaseAdmin)
