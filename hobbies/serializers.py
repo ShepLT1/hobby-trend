@@ -23,6 +23,7 @@ class MarketplaceSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "hobby",
+            "data",
             "created_at",
             "updated_at",
             "last_updated_by",

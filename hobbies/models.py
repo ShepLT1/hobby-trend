@@ -44,6 +44,8 @@ class Marketplace(BaseModel):
 
     hobby = models.ManyToManyField(Hobby, related_name="listing_hobby", default=[1])
 
+    data = models.JSONField(blank=True, default=dict)
+
     def __str__(self) -> str:
         return self.name
 
