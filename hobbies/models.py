@@ -16,6 +16,7 @@ class Hobby(BaseModel):
         SETNUM = "SN", _("Set Number")
         ISBN = "IS", _("ISBN")
         CARDNUM = "CN", _("Card Number")
+        UPC = "UP", _("UPC")
 
     name = models.CharField(max_length=64, default=None)
 
