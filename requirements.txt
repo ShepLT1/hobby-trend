@@ -4,3 +4,4 @@ sqlparse==0.4.2
 psycopg2-binary==2.9.3
 djangorestframework==3.14.0
 django-cors-headers==3.14.0
+ebaysdk==2.2.0
