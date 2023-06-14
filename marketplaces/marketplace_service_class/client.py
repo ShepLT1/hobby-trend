@@ -12,7 +12,7 @@ from hobbies.models import (
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from data_cottage.settings import env
+from hobby_trend.settings import env
 import json
 
 
