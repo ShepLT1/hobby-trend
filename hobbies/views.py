@@ -14,6 +14,7 @@ from .serializers import (
 )
 from .models import Hobby, Marketplace, Item, Listing, Media, Set
 
+
 # Create your views here.
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 50
@@ -38,7 +39,17 @@ class HobbyView(APIView):
 
 class MarketplacesView(viewsets.ModelViewSet):
     serializer_class = MarketplaceSerializer
-    queryset = Marketplace.objects.all()
+
+    def get_queryset(self):
+        queryset = Marketplace.objects.filter(hobby__id=self.kwargs["hobby_id"])
+        return queryset
+
+
+class MarketplaceView(APIView):
+    def get(self, request, marketplace_id: uuid, format=None):
+        marketplace = get_object_or_404(Marketplace, id=marketplace_id)
+        serializer = MarketplaceSerializer(marketplace)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ItemsView(viewsets.ModelViewSet):
