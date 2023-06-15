@@ -16,7 +16,7 @@ from hobby_trend.settings import env
 import json
 
 
-class Marketplace:
+class MarketplaceWrapper:
     def __init__(self, client):
         self.client = client
 
