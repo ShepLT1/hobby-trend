@@ -20,10 +20,10 @@ class MarketplaceWrapper:
     def __init__(self, client):
         self.client = client
 
-    def get_item(self, item, marketplace_item):
+    def get_item(self, item):
         marketplace_item = MarketplaceItem.objects.get(
             item=item,
-            listing_source=Marketplace.objects.get(name=self.client.source_name),
+            marketplace=Marketplace.objects.get(name=self.client.source_name),
         )
         if marketplace_item.data["id"] == None:
             response = self.client.initialize_item(item, marketplace_item)
