@@ -22,10 +22,10 @@ class TCGPlayer:
         self.base_url = env("SCRYFALL_BASE_URL")
         self.source_name = "TCGPlayer"
 
-    def get_item_by_id(self, tcgplayer_card_id):
+    def get_item(self, marketplace_item):
         response = dict(
             requests.get(
-                self.base_url + "/cards/tcgplayer/" + str(tcgplayer_card_id)
+                self.base_url + "/cards/tcgplayer/" + str(marketplace_item.data.id)
             ).json()
         )
         return response
@@ -33,8 +33,8 @@ class TCGPlayer:
     def initialize_item(self, item, marketplace_item):
         params = urllib.parse.urlencode({"exact": item.name})
         response = dict(requests.get(self.base_url + "/cards/named?" + params).json())
-        if response.status == 404:
-            raise Exception(response.details)
+        if response["status"] == 404:
+            raise Exception(response["details"])
         else:
             marketplace_item.data.id = response.tcgplayer_id
             self.ingest_listing(item, marketplace_item.marketplace, response)
