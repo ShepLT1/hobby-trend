@@ -151,7 +151,7 @@ class Listing(BaseModel):
     link = models.URLField(default="https://google.com", max_length=512)
 
     def __str__(self) -> str:
-        return f"{self.item.name} ({self.source} {self.date})"
+        return f"{self.item.name} ({self.source} {self.created_at})"
 
 
 class Media(BaseModel):
