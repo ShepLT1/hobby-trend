@@ -7,12 +7,13 @@ import uuid
 from .serializers import (
     HobbySerializer,
     MarketplaceSerializer,
+    MarketplaceItemSerializer,
     ItemSerializer,
     ListingSerializer,
     MediaSerializer,
     SetSerializer,
 )
-from .models import Hobby, Marketplace, Item, Listing, Media, Set
+from .models import Hobby, Marketplace, Item, MarketplaceItem, Listing, Media, Set
 
 
 # Create your views here.
@@ -50,6 +51,35 @@ class MarketplaceView(APIView):
         marketplace = get_object_or_404(Marketplace, id=marketplace_id)
         serializer = MarketplaceSerializer(marketplace)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MarketplaceItemsView(viewsets.ModelViewSet):
+    serializer_class = MarketplaceItemSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        queryset = MarketplaceItem.objects.filter(item__id=self.kwargs["item_id"])
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(last_updated_by=self.request.user)
+
+
+class MarketplaceItemView(APIView):
+    def get(self, request, marketplace_item_id: uuid, format=None):
+        marketplace_item = get_object_or_404(MarketplaceItem, id=marketplace_item_id)
+        serializer = MarketplaceItemSerializer(marketplace_item)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, marketplace_item_id: uuid, format=None):
+        marketplace_item = get_object_or_404(MarketplaceItem, id=marketplace_item_id)
+        serializer = MarketplaceItemSerializer(
+            instance=marketplace_item, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ItemsView(viewsets.ModelViewSet):
