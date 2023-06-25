@@ -25,7 +25,7 @@ class TCGPlayer:
     def get_item(self, marketplace_item):
         response = dict(
             requests.get(
-                self.base_url + "/cards/tcgplayer/" + str(marketplace_item.data.id)
+                self.base_url + "/cards/tcgplayer/" + str(marketplace_item.data["id"])
             ).json()
         )
         return response
@@ -33,21 +33,20 @@ class TCGPlayer:
     def initialize_item(self, item, marketplace_item):
         params = urllib.parse.urlencode({"exact": item.name})
         response = dict(requests.get(self.base_url + "/cards/named?" + params).json())
-        if response["status"] == 404:
+        print(response)
+        if response["object"] == "error":
             raise Exception(response["details"])
         else:
-            marketplace_item.data.id = response.tcgplayer_id
+            marketplace_item.data["id"] = response["tcgplayer_id"]
             self.ingest_listing(item, marketplace_item.marketplace, response)
             marketplace_item.save()
             return response
 
     def ingest_listing(self, item, marketplace, marketplace_item_listing):
         new_listing = Listing.objects.create(
-            {
-                "item": item,
-                "source": marketplace,
-                "price": marketplace_item_listing.prices.usd,
-                "link": marketplace_item_listing.purchase_uris.tcgplayer,
-            }
+            item=item,
+            source=marketplace,
+            price=marketplace_item_listing["prices"]["usd"],
+            link=marketplace_item_listing["purchase_uris"]["tcgplayer"],
         )
         return new_listing
