@@ -47,7 +47,6 @@ class Ebay:
                     f"No matching item found on Ebay for item name {marketplace_item.item.name}"
                 )
         except ConnectionError as e:
-            print(e.response.dict())
             raise Exception(e)
 
     def choose_listing(self, listings, item):
@@ -70,7 +69,6 @@ class Ebay:
                     },
                 )
             except ConnectionError as e:
-                print(e.response.dict())
                 raise Exception(e)
         else:
             try:
@@ -98,7 +96,6 @@ class Ebay:
                         f"No matching item found on Ebay for item name {item.name}"
                     )
             except ConnectionError as e:
-                print(e.response.dict())
                 raise Exception(e)
 
     def ingest_listing(self, item, marketplace, marketplace_item_listing):

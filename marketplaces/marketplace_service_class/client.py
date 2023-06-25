@@ -31,14 +31,25 @@ class MarketplaceWrapper:
 
     def ingest_listing(self, item):
         try:
-            marketplace_item = self.get_item(item)
-            marketplace = Marketplace.objects.get(name=self.client.source_name)
-            response = self.client.ingest_listing(item, marketplace, marketplace_item)
-        except MarketplaceItem.DoesNotExist:
-            marketplace_item = MarketplaceItem.objects.create(
-                item=item,
-                marketplace=Marketplace.objects.get(name=self.client.source_name),
-                data={"id": None},
-            )
-            response = self.client.initialize_item(item, marketplace_item)
-        return response
+            try:
+                marketplace_item = self.get_item(item)
+                marketplace = Marketplace.objects.get(name=self.client.source_name)
+                response = self.client.ingest_listing(
+                    item, marketplace, marketplace_item
+                )
+                return response
+            except MarketplaceItem.DoesNotExist:
+                try:
+                    marketplace_item = MarketplaceItem.objects.create(
+                        item=item,
+                        marketplace=Marketplace.objects.get(
+                            name=self.client.source_name
+                        ),
+                        data={"id": None},
+                    )
+                    response = self.client.initialize_item(item, marketplace_item)
+                    return response
+                except Exception as e:
+                    raise e
+        except Exception as e:
+            print(e)

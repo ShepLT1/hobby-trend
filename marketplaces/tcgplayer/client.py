@@ -23,24 +23,35 @@ class TCGPlayer:
         self.source_name = "TCGPlayer"
 
     def get_item(self, marketplace_item):
-        response = dict(
-            requests.get(
-                self.base_url + "/cards/tcgplayer/" + str(marketplace_item.data["id"])
-            ).json()
-        )
-        return response
+        try:
+            response = dict(
+                requests.get(
+                    self.base_url
+                    + "/cards/tcgplayer/"
+                    + str(marketplace_item.data["id"])
+                ).json()
+            )
+            if response["object"] == "error":
+                raise Exception(f'{response["details"]} while searching TCGPlayer')
+            return response
+        except Exception as e:
+            raise e
 
     def initialize_item(self, item, marketplace_item):
-        params = urllib.parse.urlencode({"exact": item.name})
-        response = dict(requests.get(self.base_url + "/cards/named?" + params).json())
-        print(response)
-        if response["object"] == "error":
-            raise Exception(response["details"])
-        else:
-            marketplace_item.data["id"] = response["tcgplayer_id"]
-            self.ingest_listing(item, marketplace_item.marketplace, response)
-            marketplace_item.save()
-            return response
+        try:
+            params = urllib.parse.urlencode({"exact": item.name})
+            response = dict(
+                requests.get(self.base_url + "/cards/named?" + params).json()
+            )
+            if response["object"] == "error":
+                raise Exception(f'{response["details"]} while searching TCGPlayer')
+            else:
+                marketplace_item.data["id"] = response["tcgplayer_id"]
+                self.ingest_listing(item, marketplace_item.marketplace, response)
+                marketplace_item.save()
+                return response
+        except Exception as e:
+            raise e
 
     def ingest_listing(self, item, marketplace, marketplace_item_listing):
         new_listing = Listing.objects.create(
