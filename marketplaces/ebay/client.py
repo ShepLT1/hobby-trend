@@ -37,8 +37,15 @@ class Ebay:
                     "sortOrder": "PricePlusShippingLowest",
                 },
             )
-            lowest_price_listing = self.choose_listing(response, marketplace_item.item)
-            return lowest_price_listing
+            if response.dict()["searchResult"]["_count"] != "0":
+                lowest_price_listing = self.choose_listing(
+                    response, marketplace_item.item
+                )
+                return lowest_price_listing
+            else:
+                raise Exception(
+                    f"No matching item found on Ebay for item name {marketplace_item.item.name}"
+                )
         except ConnectionError as e:
             print(e.response.dict())
             raise Exception(e)
@@ -78,20 +85,21 @@ class Ebay:
                         "sortOrder": "PricePlusShippingLowest",
                     },
                 )
+                if response.dict()["searchResult"]["_count"] != "0":
+                    lowest_price_item = self.choose_listing(response, item)
+                    if lowest_price_item is not None:
+                        self.ingest_listing(
+                            item, marketplace_item.marketplace, lowest_price_item
+                        )
+                        marketplace_item.save()
+                        return lowest_price_item
+                else:
+                    raise Exception(
+                        f"No matching item found on Ebay for item name {item.name}"
+                    )
             except ConnectionError as e:
                 print(e.response.dict())
                 raise Exception(e)
-            lowest_price_item = self.choose_listing(response, item)
-            if lowest_price_item is not None:
-                self.ingest_listing(
-                    item, marketplace_item.marketplace, lowest_price_item
-                )
-                marketplace_item.save()
-                return lowest_price_item
-            else:
-                raise Exception(
-                    f"No matching item found on Ebay for item name {item.name}"
-                )
 
     def ingest_listing(self, item, marketplace, marketplace_item_listing):
         new_listing = Listing.objects.create(
